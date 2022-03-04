@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Use Voiceflow to run a Slack Bot with Dialog Manager API",
   "main": "index.js",
+  "sourceType": "module",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -29,9 +30,8 @@
   "dependencies": {
     "@slack/bolt": "^3.10.0",
     "axios": "^0.26.0",
+    "dotenv": "^16.0.0",
+    "eslint": "^8.10.0",
     "string-similarity": "^4.0.4"
-  },
-  "devDependencies": {
-    "eslint": "^8.9.1"
   }
 }

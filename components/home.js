@@ -1,4 +1,4 @@
-export const show = async (client, event, user) => {
+export const show = async (client, event) => {
   let i = await client.users.info({
     user: event.user,
   });
@@ -10,7 +10,7 @@ export const show = async (client, event, user) => {
 
   try {
     // Call views.publish with the built-in client
-    const result = await client.views.publish({
+    await client.views.publish({
       // Use the user ID associated with the event
       user_id: event.user,
       view: {

@@ -5,12 +5,12 @@ import slack_pkg from '@slack/bolt'
 const { App, SayFn } = slack_pkg
 import { stripEmojis, stripBackSlashs, cleanText } from './components/utils.js'
 import * as Home from './components/home.js'
-//import dotenv from 'dotenv'
+import dotenv from 'dotenv'
 import axios from 'axios'
 import stringSimilarity from 'string-similarity'
 
 // Get Env
-// dotenv.config()
+dotenv.config()
 
 let data = {}
 let noreply

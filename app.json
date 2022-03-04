@@ -10,7 +10,7 @@
   ],
   "repository": "https://github.com/voiceflow-gallagan/heroku-vf-slackbot.git",
   "env": {
-    "VF_API_KEY": {
+    "VOICEFLOW_API_KEY": {
       "description": "Voiceflow Project API Key",
       "required": true,
       "value": ""
@@ -25,8 +25,8 @@
       "required": true,
       "value": ""
     },
-    "SLACK_APP_SECRET": {
-      "description": "Slack app secret (starting with xapp-)",
+    "SLACK_APP_TOKEN": {
+      "description": "Slack app token (starting with xapp-)",
       "required": true,
       "value": ""
     },

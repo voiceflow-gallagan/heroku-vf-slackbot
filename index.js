@@ -5,26 +5,32 @@ import slack_pkg from '@slack/bolt'
 const { App, SayFn } = slack_pkg
 import { stripEmojis, stripBackSlashs, cleanText } from './components/utils.js'
 import * as Home from './components/home.js'
-//import dotenv from 'dotenv'
+// import dotenv from 'dotenv'
 import axios from 'axios'
 import stringSimilarity from 'string-similarity'
 
 // Get Env
-//dotenv.config()
+// dotenv.config()
+
+const VOICEFLOW_API_KEY = process.env.VOICEFLOW_API_KEY
+const SLACK_APP_TOKEN = process.env.SLACK_APP_TOKEN
+const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN
+const SLACK_SIGNING_SECRET = process.env.SLACK_SIGNING_SECRET
+const PORT = process.env.PORT || 3000
 
 let data = {}
 let noreply
 
 const app = new App({
-  signingSecret: process.env.SLACK_SIGNING_SECRET,
+  signingSecret: SLACK_SIGNING_SECRET,
   token: process.env.SLACK_BOT_TOKEN,
   socketMode: true,
   appToken: process.env.SLACK_APP_TOKEN,
 })
 
-let session = `${process.env.VOICEFLOW_VERSION_ID}.${createSession()}`
-const versionID = process.env.VOICEFLOW_VERSION_ID
-const apiKey = process.env.VOICEFLOW_API_KEY
+//let session = `${process.env.VOICEFLOW_VERSION_ID}.${createSession()}`
+//const versionID = process.env.VOICEFLOW_VERSION_ID
+//const apiKey = process.env.VOICEFLOW_API_KEY
 
 app.event('app_mention', async ({ event, message, client, say }) => {
   try {
@@ -178,7 +184,7 @@ async function interact(userID, say, client, request) {
   const response = await axios({
     method: 'POST',
     url: `https://general-runtime.voiceflow.com/state/user/${userID}/interact`,
-    headers: { Authorization: apiKey, 'Content-Type': 'application/json' },
+    headers: { Authorization: VOICEFLOW_API_KEY, 'Content-Type': 'application/json' },
     data: {
       request,
       config: {

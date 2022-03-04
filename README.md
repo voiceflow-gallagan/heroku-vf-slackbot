@@ -35,8 +35,8 @@ Use Voiceflow to run a Slack Bot with Dialog Manager API
 ```
 {
     "display_information": {
-        "name": "Voiceflow Assistant",
-        "description": "Assistant to help us in every day tasks",
+        "name": "Voiceflow Slack Demo",
+        "description": "Slack Assistant using Voiceflow Dialog Manager API",
         "background_color": "#37393d"
     },
     "features": {
@@ -46,7 +46,7 @@ Use Voiceflow to run a Slack Bot with Dialog Manager API
             "messages_tab_read_only_enabled": false
         },
         "bot_user": {
-            "display_name": "Voiceflow",
+            "display_name": "Voiceflow Demo",
             "always_online": true
         }
     },

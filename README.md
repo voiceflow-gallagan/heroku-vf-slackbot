@@ -4,18 +4,19 @@ Use Voiceflow to run a Slack Bot with Dialog Manager API
 ## Prerequisite
 
 - [Heroku](https://www.heroku.com/) account
-- A slack app setup and ready
+- An access to Slack API website
 - A Chat Assistant project on Voiceflow
+
 ## Usage
 
-1. Dialog API key.
+1. Go to to https://api.slack.com/apps?new_app=1 to create your Slack app
+
+
+
 2. click [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 3. On Heroku, enter the following and click "Deploy app"
   - *App Name*
-    - set your app name on Heroku
-      - used for heroku URL for your app
-      - ex) https://APP_NAME.herokuapp.com
-      - will need this for chatbot settings in your website
+    - set your app name on Heroku as well as some info from Slack and Voiceflow
   - *VF_API_KEY*
     - enter Voiceflow Dlaog API key
   - *SLACK_SIGNING_SECRET*
@@ -29,7 +30,6 @@ Use Voiceflow to run a Slack Bot with Dialog Manager API
 
 
 
-https://api.slack.com/apps
 
 
 ```

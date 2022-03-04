@@ -4,7 +4,6 @@ export const show = async (client, event) => {
   });
 
   let userName = i.user.profile.real_name_normalized;
-  let name = i.user.profile.display_name_normalized;
   let userPix = i.user.profile.image_192;
   let title = i.user.profile.title;
 
@@ -21,8 +20,7 @@ export const show = async (client, event) => {
             type: 'section',
             text: {
               type: 'mrkdwn',
-              //text: `Hey <@${event.user}>! :wave:\n\n`,
-              text: `Hey ${name}! :wave:\n\n`,
+              text: `Hey <@${event.user}>! :wave:\n\n`
             },
           },
           {

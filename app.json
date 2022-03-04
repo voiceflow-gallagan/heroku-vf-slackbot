@@ -20,7 +20,7 @@
       "required": true,
       "value": ""
     },
-    "SLACK_BOT_SECRET": {
+    "SLACK_BOT_TOKEN": {
       "description": "Slack bot token (starting with xoxb-)",
       "required": true,
       "value": ""

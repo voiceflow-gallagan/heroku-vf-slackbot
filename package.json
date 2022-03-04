@@ -29,7 +29,6 @@
   "dependencies": {
     "@slack/bolt": "^3.10.0",
     "axios": "^0.26.0",
-    "dotenv": "^16.0.0",
     "string-similarity": "^4.0.4"
   },
   "devDependencies": {

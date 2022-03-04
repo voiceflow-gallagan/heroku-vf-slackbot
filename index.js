@@ -10,12 +10,10 @@ import axios from 'axios'
 import stringSimilarity from 'string-similarity'
 
 // Get Env
-//dotenv.config()
+// dotenv.config()
 
 let data = {}
 let noreply
-let isError = false
-let errorMessage = ''
 
 const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -127,8 +125,8 @@ app.message(ANY_WORD_REGEX, async ({ message, say, client }) => {
 })()
 
 // Enable graceful stop
-process.once('SIGINT', () => app.stop('SIGINT'))
-process.once('SIGTERM', () => app.stop('SIGTERM'))
+//process.once('SIGINT', () => app.stop('SIGINT'))
+//process.once('SIGTERM', () => app.stop('SIGTERM'))
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
@@ -180,7 +178,7 @@ async function interact(userID, say, client, request) {
   const response = await axios({
     method: 'POST',
     url: `https://general-runtime.voiceflow.com/state/user/${userID}/interact`,
-    headers: { Authorization: apiKey },
+    headers: { Authorization: apiKey, 'Content-Type': 'application/json' },
     data: {
       request,
       config: {
@@ -322,11 +320,6 @@ async function interact(userID, say, client, request) {
             type: 'no-reply',
           })
         }, trace.payload.timeout * 1000)
-        break
-      }
-      case 'error': {
-        isError = true
-        errorMessage = trace.payload || null
         break
       }
       case 'end': {

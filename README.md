@@ -26,3 +26,71 @@ Use Voiceflow to run a Slack Bot with Dialog Manager API
     - Slack app secret (starting with xapp-)
   - *PORT*
     - The port to use (default: 3000)
+
+
+
+https://api.slack.com/apps
+
+
+```
+{
+    "display_information": {
+        "name": "Voiceflow Assistant",
+        "description": "Assistant to help us in every day tasks",
+        "background_color": "#37393d"
+    },
+    "features": {
+        "app_home": {
+            "home_tab_enabled": true,
+            "messages_tab_enabled": true,
+            "messages_tab_read_only_enabled": false
+        },
+        "bot_user": {
+            "display_name": "Voiceflow",
+            "always_online": true
+        }
+    },
+    "oauth_config": {
+        "scopes": {
+            "user": [
+                "users:read"
+            ],
+            "bot": [
+                "app_mentions:read",
+                "channels:history",
+                "chat:write",
+                "im:history",
+                "im:read",
+                "im:write",
+                "mpim:history",
+                "mpim:read",
+                "mpim:write",
+                "users.profile:read",
+                "users:read"
+            ]
+        }
+    },
+    "settings": {
+        "event_subscriptions": {
+            "user_events": [
+                "message.app_home",
+                "user_change"
+            ],
+            "bot_events": [
+                "app_home_opened",
+                "app_mention",
+                "message.channels",
+                "message.im",
+                "message.mpim",
+                "user_change"
+            ]
+        },
+        "interactivity": {
+            "is_enabled": true
+        },
+        "org_deploy_enabled": false,
+        "socket_mode_enabled": true,
+        "token_rotation_enabled": false
+    }
+}
+```

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Use Voiceflow to run a Slack Bot with Dialog Manager API",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint ."

@@ -1,0 +1,44 @@
+{
+  "name": "heroku-vf-slackbot",
+  "description": "Use Voiceflow to run a Slack Bot with Dialog Manager API",
+  "keywords": [
+    "voiceflow",
+    "slack",
+    "dialog manager",
+    "api",
+    "bot"
+  ],
+  "repository": "https://github.com/voiceflow-gallagan/heroku-vf-slackbot.git",
+  "env": {
+    "VF_API_KEY": {
+      "description": "Voiceflow Project API Key",
+      "required": true,
+      "value": ""
+    },
+    "SLACK_SIGNING_SECRET": {
+      "description": "Slack app signing secret",
+      "required": true,
+      "value": ""
+    },
+    "SLACK_BOT_SECRET": {
+      "description": "Slack bot token (starting with xoxb-)",
+      "required": true,
+      "value": ""
+    },
+    "SLACK_APP_SECRET": {
+      "description": "Slack app secret (starting with xapp-)",
+      "required": true,
+      "value": ""
+    },
+    "PORT": {
+      "description": "Port to use (default: 3000)",
+      "required": false,
+      "value": "3000"
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-redis:hobby-dev"
+    }
+  ]
+}

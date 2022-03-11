@@ -25,10 +25,6 @@ const app = new App({
   appToken: SLACK_APP_TOKEN,
 })
 
-//let session = `${process.env.VOICEFLOW_VERSION_ID}.${createSession()}`
-//const versionID = process.env.VOICEFLOW_VERSION_ID
-//const apiKey = process.env.VOICEFLOW_API_KEY
-
 app.event('app_mention', async ({ event, client, say }) => {
   try {
     // Call chat.postMessage with the built-in client
@@ -125,8 +121,8 @@ app.message(ANY_WORD_REGEX, async ({ message, say, client }) => {
 })()
 
 // Enable graceful stop
-//process.once('SIGINT', () => app.stop('SIGINT'))
-//process.once('SIGTERM', () => app.stop('SIGTERM'))
+process.once('SIGINT', () => app.stop('SIGINT'))
+process.once('SIGTERM', () => app.stop('SIGTERM'))
 
 
 function cleanEmail(text) {

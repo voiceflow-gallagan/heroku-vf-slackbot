@@ -1,38 +1,35 @@
 # heroku-vf-slackbot
-Use Voiceflow to run a Slack Bot with Dialog Manager API
 
-## Prerequisite
+#### Use Voiceflow Dialog Manager API to run a Slack Bot
+
+# Prerequisite
 
 - [Heroku](https://www.heroku.com/) account
-- An access to Slack API website
-- A Chat Assistant project on Voiceflow
+- [Slack API](https://api.slack.com/) access
+- [Voiceflow](https://www.voiceflow.com) Chat Assistant project
 
-## Usage
+# Setup
 
-1. Go to to https://api.slack.com/apps?new_app=1 to create your Slack app
+## ![Slack logo](doc/images/slack/slack-logo.png)
 
+### Create your Slack App
 
+> Go to to https://api.slack.com/apps?new_app=1 to **create your Slack app**
 
-2. click [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
-3. On Heroku, enter the following and click "Deploy app"
-  - *App Name*
-    - set your app name on Heroku as well as some info from Slack and Voiceflow
-  - *VF_API_KEY*
-    - enter Voiceflow Dlaog API key
-  - *SLACK_SIGNING_SECRET*
-    - Slack app signing secret
-  - *SLACK_BOT_SECRET*
-    - Slack bot token (starting with xoxb-)
-  - *SLACK_APP_SECRET*
-    - Slack app secret (starting with xapp-)
-  - *PORT*
-    - The port to use (default: 3000)
+> Select <mark>**From an app manifest**</mark> 
 
 
+![Create a new Slack app](doc/images/slack/slack-create-app.png)
 
+> Select the **workspace** you want to publish the app to
 
+![Select a worksapce](doc/images/slack/slack-select-workspace.png)
 
-```
+> Choose <mark>**JSON**</mark> on the next screen and paste the manifest bellow
+
+![Slack Manifest](doc/images/slack/slack-manifest.png)
+
+~~~json
 {
     "display_information": {
         "name": "Voiceflow Slack Demo",
@@ -93,4 +90,95 @@ Use Voiceflow to run a Slack Bot with Dialog Manager API
         "token_rotation_enabled": false
     }
 }
-```
+~~~
+
+> Click **Next** at the bottom of the window
+
+![Next](doc/images/slack/slack-app-next.png)
+
+> **Review** the app details and comfirm by clicking on **Create**
+
+![Review Slack app](doc/images/slack/slack-app-review.png)
+
+> **Install** the newly created app on your workspace
+
+![Install Slack app](doc/images/slack/slack-install.png)
+
+> Click on **Allow** to finish to install the app on your Workspace
+
+![Allow Slack app](doc/images/slack/slack-allow.png)
+
+### Generate a signin key and tokens
+
+> On the main screen, you want to <mark>**copy the secret key** and **keep it for later**</mark>
+
+![Slack app secret](doc/images/slack/slack-signin-secret.png)
+
+> Scroll down and click on **Generate Token and Scopes**
+
+![Slack app level tokens](doc/images/slack/slack-app-level-tokens.png)
+
+> Give this Token a **name** and add the **connections:write** scope to it. Then click on **Generate**
+
+![Slack app scope](doc/images/slack/slack-app-level-scope.png)
+
+- Copy the <mark>**app token** and **save it for later**</mark>
+
+![Slack app token](doc/images/slack/slack-app-token.png)
+
+> Go to the **OAuth & Permissions** section, <mark>copy the **Bot User OAuth Token** from there and save it for later</mark>
+
+![Slack app bot token](doc/images/slack/slack-bot-user-token.png)
+
+> You should now have:  
+	a <mark>**secret key**</mark>  
+	an <mark>**app token**</mark>  
+	a <mark>**bot token**</mark>  
+
+##<img src="doc/images/voiceflow/voiceflow-logo.png" alt="Voiceflow logo" width="180"/>
+
+### Get your project Dialog API key
+
+> Go to [Voiceflow Creator](https://creator.voiceflow.com) and open the <mark>**Chat Assistant project**</mark> you want to use
+
+> On your project, click on **Integration** from the left sidebar (or press the **3** key)
+
+![Voiceflow integration](doc/images/voiceflow/voiceflow-integration.png)
+
+> Click **Copy** to <mark>copy your Voiceflow Dialog API Key and save it for later</mark>
+
+![Voiceflow API key](doc/images/voiceflow/voiceflow-copy.png)
+
+
+##<img src="doc/images/heroku/heroku-logo.png" alt="Voiceflow logo" width="180"/>
+
+### Deploy this code to Heroku
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+### Setup the Heroku app
+
+> Choose a **name** for your app and click on **Create app**
+
+![Deploy](doc/images/heroku/heroku-name.png)
+  
+  **VOICEFLOW\_API\_KEY**
+    - Voiceflow **project API key** (from the Integration section)
+  
+  **SLACK\_SIGNING\_SECRET**
+    - Slack app **signing secret**
+  
+  **SLACK\_BOT\_TOKEN**
+    - Slack **bot token** (starting with **xoxb-**)
+    
+  **SLACK\_APP\_TOKEN**
+    - Slack **app secret** (starting with **xapp-**)
+  
+  **PORT**
+    - The port to use (default: **3000**)
+
+
+
+
+
+

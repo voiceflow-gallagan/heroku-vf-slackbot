@@ -2,4 +2,4 @@ setup:
   addons:
     - plan: heroku-redis:hobby-dev
 run:
-  worker: npm start
+  app: node index.js

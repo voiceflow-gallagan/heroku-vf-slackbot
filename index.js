@@ -336,5 +336,5 @@ async function interact(userID, say, client, request) {
   return true
 }
 
-process.once('SIGINT', () => app.stop('SIGINT'))
-process.once('SIGTERM', () => app.stop('SIGTERM'))
+//process.once('SIGINT', () => app.stop('SIGINT'))
+//process.once('SIGTERM', () => app.stop('SIGTERM'))

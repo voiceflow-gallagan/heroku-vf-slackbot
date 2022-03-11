@@ -33,7 +33,7 @@
 
 ![Select a worksapce](doc/images/slack/slack-select-workspace.png)
 
-> Choose <mark>**JSON**</mark> on the next screen and paste the manifest bellow
+> Choose <mark>**JSON**</mark> on the next screen and replace evrything with the manifest bellow
 
 ![Slack Manifest](doc/images/slack/slack-manifest.png)
 
@@ -130,7 +130,7 @@
 
 ![Slack app scope](doc/images/slack/slack-app-level-scope.png)
 
-- Copy the <mark>**app token** and **save it for later**</mark>
+> Copy the <mark>**app token** and **save it for later**</mark>
 
 ![Slack app token](doc/images/slack/slack-app-token.png)
 
@@ -166,7 +166,7 @@
 
 ### Setup the Heroku app
 
-> Choose a **name** for your app
+> Choose a **name** for your app  
 > Set the config var with all the info you've previously saved
 
 **SLACK\_APP\_TOKEN**

@@ -15,6 +15,7 @@ const VOICEFLOW_API_KEY = process.env.VOICEFLOW_API_KEY
 const SLACK_APP_TOKEN = process.env.SLACK_APP_TOKEN
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN
 const SLACK_SIGNING_SECRET = process.env.SLACK_SIGNING_SECRET
+const PORT = process.env.PORT || 3000
 
 let noreply
 
@@ -121,8 +122,8 @@ app.message(ANY_WORD_REGEX, async ({ message, say, client }) => {
 })
 ;(async () => {
   // Start the app
-  await app.start(process.env.PORT || 3000)
-  console.log(`⚡️ Bolt app is running on port ${process.env.PORT || 3000}!`)
+  await app.start(PORT)
+  console.log(`⚡️ Bolt app is running on port ${PORT}!`)
 })()
 
 // Interact with Voiceflow | Dialog Manager API

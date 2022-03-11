@@ -195,3 +195,9 @@ Voiceflow **project API key** (from the Integration section)
 > **Search** for the app name you've created earlier on Slack API website and **click on it** in the Search results list to install it
 
 ![Create a new Slack app](doc/images/slack/slack-install-app.png)
+
+> The app is now available and you can click on **Messages** to start interacting with your bot.
+
+![Create a new Slack app](doc/images/slack/slack-try-app.png)
+
+![Create a new Slack app](doc/images/slack/slack-bot.png)

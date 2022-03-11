@@ -1,11 +1,12 @@
 /* eslint-disable no-await-in-loop */
-
 import slack_pkg from '@slack/bolt'
 const { App } = slack_pkg
-import { stripEmojis, stripBackSlashs, cleanText } from './components/utils.js'
+import { cleanEmail, stripEmojis, stripBackSlashs, cleanText, CHIP_ACTION_REGEX, ANY_WORD_REGEX } from './components/utils.js'
 import * as Home from './components/home.js'
 // import dotenv from 'dotenv'
 import axios from 'axios'
+import { Text } from 'slate'
+import escapeHtml from 'escape-html'
 
 // Get Env
 // dotenv.config()
@@ -18,6 +19,7 @@ const PORT = process.env.PORT || 3000
 
 let noreply
 
+// Create the Slack app
 const app = new App({
   signingSecret: SLACK_SIGNING_SECRET,
   token: SLACK_BOT_TOKEN,
@@ -25,9 +27,10 @@ const app = new App({
   appToken: SLACK_APP_TOKEN,
 })
 
+// Slack app_mention event
 app.event('app_mention', async ({ event, client, say }) => {
   try {
-    // Call chat.postMessage with the built-in client
+
     let i = await client.users.info({
       user: event.user,
     })
@@ -58,7 +61,6 @@ app.event('app_home_opened', async ({ event, client }) => {
   Home.show(client, event)
 })
 
-const CHIP_ACTION_REGEX = new RegExp(/chip:(.+):(.+)/i)
 app.action(CHIP_ACTION_REGEX, async ({ action, say, ack, client }) => {
   ack()
   if (action.type !== 'button') return
@@ -70,7 +72,6 @@ app.action(CHIP_ACTION_REGEX, async ({ action, say, ack, client }) => {
   })
 
   if (path.includes('path-')) {
-    console.log('isPath')
     await interact(userID, say, client, {
       type: path,
       payload: {
@@ -92,17 +93,22 @@ app.action(CHIP_ACTION_REGEX, async ({ action, say, ack, client }) => {
   }
 })
 
-const ANY_WORD_REGEX = new RegExp(/(.+)/i)
 app.message(ANY_WORD_REGEX, async ({ message, say, client }) => {
+  // Ignoring some message types
   if (
     message.subtype === 'message_changed' ||
     message.subtype === 'message_deleted' ||
     message.subtype === 'message_replied'
   )
     return
+
+  // Cleaning user's utterance from Slack
   let utterance = stripEmojis(message.text)
+  // Formating Slack email format from <mailto:name@email.com|name@email.com> to name@email.com
   utterance = cleanEmail(utterance)
+
   console.log('Utterance:', utterance)
+
   if (utterance === 'hi' || utterance === 'hi there') {
     await interact(message.user, say, client, {
       type: 'launch',
@@ -120,30 +126,14 @@ app.message(ANY_WORD_REGEX, async ({ message, say, client }) => {
   console.log(`⚡️ Bolt app is running on port ${PORT}!`)
 })()
 
-// Enable graceful stop
-process.once('SIGINT', () => app.stop('SIGINT'))
-process.once('SIGTERM', () => app.stop('SIGTERM'))
-
-
-function cleanEmail(text) {
-  let email = text.match(/([a-zA-Z0-9+._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi)
-  let result = text
-  if (email) {
-    console.log('isEmail')
-    email = email[0]
-    result = text.split('<')[0]
-    result = result + email + text.split('>')[1]
-  }
-  return result
-}
-
+// Interact with Voiceflow | Dialog Manager API
 async function interact(userID, say, client, request) {
   clearTimeout(noreply)
   await client.users.info({
     user: userID,
   })
-  console.log('INTERACT')
-  // call the Voiceflow API with the user's name & request, get back a response
+
+  // call the Voiceflow API with the user's ID & request
   const response = await axios({
     method: 'POST',
     url: `https://general-runtime.voiceflow.com/state/user/${userID}/interact`,
@@ -157,26 +147,52 @@ async function interact(userID, say, client, request) {
     },
   })
 
+  // Handeling the API response
   for (const trace of response.data) {
-    console.log('TRACE TYPE:', trace.type)
-    // DEBUG PAYLOAD
-      console.log(trace.payload)
     switch (trace.type) {
       case 'text': {
-        // DEBUG PAYLOAD
-        // console.log(trace.payload.slate.content[0]);
-        // console.log(trace.payload.message);
+          // We use Slate's rendering
+          // and add custom styling
+          const serialize = node => {
+            if (Text.isText(node)) {
+              let string = node.text
+              let tags = ''
+              if (node.fontWeight) {
+                tags = '*'
+              }
+              if (node.italic) {
+                tags = tags + '_'
+              }
+              if (node.underline) {
+                // ignoring underline tag as Slack doesn't support it
+                // https://api.slack.com/reference/surfaces/formatting
+              }
+              if (node.strikeThrough) {
+                tags = tags + '~'
+              }
+              return `${tags}${string}${tags.split('').reverse().join('')}`
+            }
+
+            const children = node.children.map(n => serialize(n)).join('')
+
+            switch (node.type) {
+              case 'link':
+                return `<${escapeHtml(node.url)}|${children}>`
+              default:
+                return children
+            }
+          }
+
+          // Render slate content
           let renderedMessage = trace.payload.slate.content
-            // Format each slate child
             .map((slateData) =>
               slateData.children
-                // Just the text
-                .map((slateChild) => slateChild.text)
-                // Join with no separator
-                .join('')
+                  .map((slateChild) => serialize(slateChild))
+                  .join('')
             )
-            // Join with more newlines
             .join('\n')
+
+          console.log('Render:',renderedMessage)
           try {
             await say({
             text: 'Voiceflow Bot',
@@ -191,11 +207,14 @@ async function interact(userID, say, client, request) {
             ],
           })
           } catch (error) {
-            console.log('No supported yet')
+            // Avoid breaking the Bot by ignoring then content if not supported
+            console.log('Not supported yet')
+            return false
           }
         break
       }
       case 'speak': {
+        try {
           await say({
             text: 'Voiceflow Bot',
             blocks: [
@@ -208,28 +227,31 @@ async function interact(userID, say, client, request) {
               },
             ],
           })
+        } catch (error) {
+            // Avoid breaking the Bot by ignoring then content if not supported
+            console.log('Not supported yet')
+            return false
+        }
         break
       }
       case 'visual': {
         if (trace.payload.visualType === 'image') {
-          const url = ''
-          if (url != 0) {
-            await say({
-              text: 'Voiceflow Bot',
-              blocks: [{ type: 'image', image_url: url, alt_text: 'image' }],
-            })
-          } else {
-            await say({
-              text: 'Voiceflow Bot',
-              blocks: [
-                {
-                  type: 'image',
-                  image_url: trace.payload.image,
-                  alt_text: 'image',
-                },
-              ],
-            })
-          }
+              try {
+                await say({
+                  text: 'Voiceflow Bot',
+                  blocks: [
+                    {
+                      type: 'image',
+                     image_url: trace.payload.image,
+                     alt_text: 'image',
+                    },
+                  ],
+                })
+              } catch (error) {
+                // Avoid breaking the Bot by ignoring then content if not supported
+                console.log('Not supported yet')
+                return false
+              }
         }
         break
       }
@@ -237,43 +259,62 @@ async function interact(userID, say, client, request) {
         const buttons = trace.payload.buttons
 
         if (buttons.length) {
-          await say({
-            text: 'Voiceflow Bot',
-            blocks: [
-              {
-                type: 'actions',
-                elements: buttons.map(({ name, request }) => {
-                  if (request.type == 'intent') {
-                    return {
-                      type: 'button',
-                      action_id: `chip:${
-                        request.payload.intent.name
-                      }:${userID}:${Math.random().toString(6)}`,
-                      text: {
-                        type: 'plain_text',
-                        text: name,
-                        emoji: true,
-                      },
-                      value: name,
+          try {
+            let url = null
+            await say({
+              text: 'Voiceflow Bot',
+              blocks: [
+                {
+                  type: 'actions',
+                  elements: buttons.map(({ name, request }) => {
+                    // Handle URL action
+                    if(Object.keys(request.payload).includes("actions")){
+                      if(Object.values(request.payload.actions[0]).includes("open_url")){
+                        url = escapeHtml(request.payload.actions[0].payload.url)
+                      }
                     }
-                  } else {
-                    return {
-                      type: 'button',
-                      action_id: `chip:${
-                        request.type
-                      }:${userID}:${Math.random().toString(6)}`,
-                      text: {
-                        type: 'plain_text',
-                        text: name,
-                        emoji: true,
-                      },
-                      value: name,
+                    if (request.type == 'intent') {
+                      let button = {
+                        type: 'button',
+                        action_id: `chip:${
+                          request.payload.intent.name
+                        }:${userID}:${Math.random().toString(6)}`,
+                        text: {
+                          type: 'plain_text',
+                          text: name,
+                          emoji: true,
+                        },
+                        value: name,
+                        style: 'primary'
+                      }
+                      if(url){ button.url = url}
+                      return button
+                    } else {
+                      let button = {
+                        type: 'button',
+                        action_id: `chip:${
+                          request.type
+                        }:${userID}:${Math.random().toString(6)}`,
+                        text: {
+                          type: 'plain_text',
+                          text: name,
+                          emoji: true,
+                        },
+                        value: name,
+                        style: 'primary'
+                      }
+                      if(url){ button.url = url}
+                      return button
                     }
-                  }
-                }),
-              },
-            ],
-          })
+                  }),
+                },
+              ],
+            })
+          } catch (error) {
+            // Avoid breaking the Bot by ignoring then content if not supported
+            console.log('Not supported yet')
+            return false
+          }
         }
         break
       }
@@ -295,3 +336,8 @@ async function interact(userID, say, client, request) {
   }
   return true
 }
+
+// Enable graceful stop
+process.once('SIGINT', () => app.stop('SIGINT'))
+process.once('SIGTERM', () => app.stop('SIGTERM'))
+

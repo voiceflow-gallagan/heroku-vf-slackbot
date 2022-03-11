@@ -154,7 +154,7 @@
 
 ### Deploy this code to Heroku
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+<a href="https://heroku.com/deploy" target="_blank">![Deploy](https://www.herokucdn.com/deploy/button.svg)</a>
 
 ### Setup the Heroku app
 

@@ -2,6 +2,10 @@
 
 #### Use Voiceflow Dialog Manager API to run a Slack Bot
 
+# Updates
+
+- Fix for Socket Mode on Heroky
+
 # Prerequisite
 
 - [Heroku](https://www.heroku.com/) account

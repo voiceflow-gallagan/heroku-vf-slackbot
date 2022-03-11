@@ -135,7 +135,7 @@
 	an <mark>**app token**</mark>  
 	a <mark>**bot token**</mark>  
 
-##<img src="doc/images/voiceflow/voiceflow-logo.png" alt="Voiceflow logo" width="180"/>
+<img src="doc/images/voiceflow/voiceflow-logo.png" alt="Voiceflow logo" width="180"/>
 
 ### Get your project Dialog API key
 
@@ -150,7 +150,7 @@
 ![Voiceflow API key](doc/images/voiceflow/voiceflow-copy.png)
 
 
-##<img src="doc/images/heroku/heroku-logo.png" alt="Voiceflow logo" width="180"/>
+<img src="doc/images/heroku/heroku-logo.png" alt="Voiceflow logo" width="180"/>
 
 ### Deploy this code to Heroku
 
@@ -158,27 +158,40 @@
 
 ### Setup the Heroku app
 
-> Choose a **name** for your app and click on **Create app**
+> Choose a **name** for your app
+> Set the config var with all the info you've previously saved
 
-![Deploy](doc/images/heroku/heroku-name.png)
+**PORT**  
+The port to use (default: **3000**)
+
+**SLACK\_APP\_TOKEN**  
+Slack **app secret** (starting with **xapp-**)
+
+**SLACK\_BOT\_TOKEN**  
+Slack **bot token** (starting with **xoxb-**)
+
+**SLACK\_SIGNING\_SECRET**  
+Slack app **signing secret**
+
+**VOICEFLOW\_API\_KEY**  
+Voiceflow **project API key** (from the Integration section)
+
+> Click on **Deploy app**
+
+![Deploy](doc/images/heroku/heroku-setup.png)
   
-  **VOICEFLOW\_API\_KEY**
-    - Voiceflow **project API key** (from the Integration section)
-  
-  **SLACK\_SIGNING\_SECRET**
-    - Slack app **signing secret**
-  
-  **SLACK\_BOT\_TOKEN**
-    - Slack **bot token** (starting with **xoxb-**)
-    
-  **SLACK\_APP\_TOKEN**
-    - Slack **app secret** (starting with **xapp-**)
-  
-  **PORT**
-    - The port to use (default: **3000**)
+> Wait for your app to be fully deployed
 
+![Deploy](doc/images/heroku/heroku-deploy.png)
 
+## ![Slack logo](doc/images/slack/slack-logo.png)
 
+### Install your Slack App
 
+> On your Slack workspace, click on **Apps** > **Add apps**
 
+![Create a new Slack app](doc/images/slack/slack-add-app.png)
 
+> **Search** for the app name you've created earlier on Slack API website and **click on it** in the Search results list to install it
+
+![Create a new Slack app](doc/images/slack/slack-install-app.png)

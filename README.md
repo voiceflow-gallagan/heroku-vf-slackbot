@@ -189,15 +189,27 @@ Voiceflow **project API key** (from the Integration section)
 
 ![Deploy](doc/images/heroku/heroku-deploy.png)
 
+> **Last important thing we want to do is to swap ressources on your Heroky app.**
+> Here we want to **turn off** the **web** and **turn on** the **worker** as the Slack bot is setup in **socket mode**
+
+![Deploy](doc/images/heroku/heroku-ressources.png)
+![Deploy](doc/images/heroku/heroku-worker-confirm.png)
+
+> After the changes, your config **should look like this**:
+ 
+![Deploy](doc/images/heroku/heroku-worker.png)
+
+
+
 ## ![Slack logo](doc/images/slack/slack-logo.png)
 
 ### Install your Slack App
 
-> On your Slack workspace, click on **Apps** > **Add apps**
+> On your **Slack workspace**, click on **Apps** > **Add apps**
 
 ![Create a new Slack app](doc/images/slack/slack-add-app.png)
 
-> **Search** for the app name you've created earlier on Slack API website and **click on it** in the Search results list to install it
+> **Search** for 'Voiceflow Slack Demo' or the app name you've created earlier on Slack API website and **click on it** in the Search results list to install it
 
 ![Create a new Slack app](doc/images/slack/slack-install-app.png)
 

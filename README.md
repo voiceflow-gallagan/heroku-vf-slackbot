@@ -4,13 +4,17 @@
 
 # Updates
 
-- Fix for Socket Mode on Heroky
+	[v1.0]
+	- Fix for Socket Mode on Heroku
+	- Handle weblinks in Text step
+	- Handle link action in Buttons
+	- Translate text styling to Slack Markdown format
 
 # Prerequisite
 
 - [Heroku](https://www.heroku.com/) account
 - [Slack API](https://api.slack.com/) access
-- [Voiceflow](https://www.voiceflow.com) Chat Assistant project
+- [Voiceflow](https://www.voiceflow.com) **Chat Assistant** project
 
 # Setup
 

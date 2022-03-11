@@ -3,13 +3,9 @@ import slack_pkg from '@slack/bolt'
 const { App } = slack_pkg
 import { cleanEmail, stripEmojis, stripBackSlashs, cleanText, CHIP_ACTION_REGEX, ANY_WORD_REGEX } from './components/utils.js'
 import * as Home from './components/home.js'
-import dotenv from 'dotenv'
 import axios from 'axios'
 import { Text } from 'slate'
 import escapeHtml from 'escape-html'
-
-// Get Env
-dotenv.config()
 
 const VOICEFLOW_API_KEY = process.env.VOICEFLOW_API_KEY
 const SLACK_APP_TOKEN = process.env.SLACK_APP_TOKEN

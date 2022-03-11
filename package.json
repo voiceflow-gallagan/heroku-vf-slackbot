@@ -30,7 +30,6 @@
   "dependencies": {
     "@slack/bolt": "^3.10.0",
     "axios": "^0.26.0",
-    "dotenv": "^16.0.0",
     "escape-html": "^1.0.3",
     "eslint": "^8.10.0",
     "slate": "^0.73.1",

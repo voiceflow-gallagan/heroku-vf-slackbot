@@ -20,7 +20,6 @@ const app = new App({
   token: SLACK_BOT_TOKEN,
   socketMode: true,
   appToken: SLACK_APP_TOKEN,
-  port: process.env.PORT || 3000,
 })
 
 // Slack app_mention event
@@ -119,7 +118,7 @@ app.message(ANY_WORD_REGEX, async ({ message, say, client }) => {
 ;(async () => {
   // Start the app
   await app.start()
-  console.log(`⚡️ Bolt app is running on port ${process.env.PORT}!`)
+  console.log(`⚡️ Bolt app is running!`)
 })()
 
 // Interact with Voiceflow | Dialog Manager API

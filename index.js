@@ -15,7 +15,12 @@ const VOICEFLOW_API_KEY = process.env.VOICEFLOW_API_KEY
 const SLACK_APP_TOKEN = process.env.SLACK_APP_TOKEN
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN
 const SLACK_SIGNING_SECRET = process.env.SLACK_SIGNING_SECRET
-const PORT = 3000
+
+// Handle local dev
+let PORT = process.env.PORT
+if (PORT == null || PORT == "") {
+  PORT = 3000;
+}
 
 let noreply
 

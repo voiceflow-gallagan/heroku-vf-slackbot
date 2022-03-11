@@ -3,19 +3,19 @@ import slack_pkg from '@slack/bolt'
 const { App } = slack_pkg
 import { cleanEmail, stripEmojis, stripBackSlashs, cleanText, CHIP_ACTION_REGEX, ANY_WORD_REGEX } from './components/utils.js'
 import * as Home from './components/home.js'
-// import dotenv from 'dotenv'
+import dotenv from 'dotenv'
 import axios from 'axios'
 import { Text } from 'slate'
 import escapeHtml from 'escape-html'
 
 // Get Env
-// dotenv.config()
+dotenv.config()
 
 const VOICEFLOW_API_KEY = process.env.VOICEFLOW_API_KEY
 const SLACK_APP_TOKEN = process.env.SLACK_APP_TOKEN
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN
 const SLACK_SIGNING_SECRET = process.env.SLACK_SIGNING_SECRET
-const PORT = process.env.PORT || 3000
+const PORT = 3000
 
 let noreply
 
@@ -340,4 +340,3 @@ async function interact(userID, say, client, request) {
 // Enable graceful stop
 process.once('SIGINT', () => app.stop('SIGINT'))
 process.once('SIGTERM', () => app.stop('SIGTERM'))
-

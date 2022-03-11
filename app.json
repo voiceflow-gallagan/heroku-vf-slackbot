@@ -29,11 +29,6 @@
       "description": "Slack app token (starting with xapp-)",
       "required": true,
       "value": ""
-    },
-    "PORT": {
-      "description": "Port to use (default: 3000)",
-      "required": false,
-      "value": "3000"
     }
   },
   "addons": [

@@ -337,6 +337,6 @@ async function interact(userID, say, client, request) {
   return true
 }
 
-// Enable graceful stop
-process.once('SIGINT', () => app.stop('SIGINT'))
-process.once('SIGTERM', () => app.stop('SIGTERM'))
+// Enable graceful stop | Do not use on Heroku
+// process.once('SIGINT', () => app.stop('SIGINT'))
+// process.once('SIGTERM', () => app.stop('SIGTERM'))

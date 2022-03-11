@@ -16,7 +16,7 @@
 
 > Go to to https://api.slack.com/apps?new_app=1 to **create your Slack app**
 
-> Select <mark>**From an app manifest**</mark> 
+> Select <mark>**From an app manifest**</mark>
 
 
 ![Create a new Slack app](doc/images/slack/slack-create-app.png)
@@ -130,10 +130,10 @@
 
 ![Slack app bot token](doc/images/slack/slack-bot-user-token.png)
 
-> You should now have:  
-	a <mark>**secret key**</mark>  
-	an <mark>**app token**</mark>  
-	a <mark>**bot token**</mark>  
+> You should now have:
+	a <mark>**secret key**</mark>
+	an <mark>**app token**</mark>
+	a <mark>**bot token**</mark>
 
 <img src="doc/images/voiceflow/voiceflow-logo.png" alt="Voiceflow logo" width="180"/>
 
@@ -161,25 +161,22 @@
 > Choose a **name** for your app
 > Set the config var with all the info you've previously saved
 
-**PORT**  
-The port to use (default: **3000**)
-
-**SLACK\_APP\_TOKEN**  
+**SLACK\_APP\_TOKEN**
 Slack **app secret** (starting with **xapp-**)
 
-**SLACK\_BOT\_TOKEN**  
+**SLACK\_BOT\_TOKEN**
 Slack **bot token** (starting with **xoxb-**)
 
-**SLACK\_SIGNING\_SECRET**  
+**SLACK\_SIGNING\_SECRET**
 Slack app **signing secret**
 
-**VOICEFLOW\_API\_KEY**  
+**VOICEFLOW\_API\_KEY**
 Voiceflow **project API key** (from the Integration section)
 
 > Click on **Deploy app**
 
 ![Deploy](doc/images/heroku/heroku-setup.png)
-  
+
 > Wait for your app to be fully deployed
 
 ![Deploy](doc/images/heroku/heroku-deploy.png)

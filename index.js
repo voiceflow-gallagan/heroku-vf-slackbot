@@ -123,212 +123,247 @@ app.message(ANY_WORD_REGEX, async ({ message, say, client }) => {
 
 // Interact with Voiceflow | Dialog Manager API
 async function interact(userID, say, client, request) {
-  clearTimeout(noreply)
-  await client.users.info({
+  clearTimeout(noreply);
+  let i = await client.users.info({
     user: userID,
-  })
+  });
+  let userName = i.user.profile.real_name_normalized;
+  let userPix = i.user.profile.image_48;
 
-  // call the Voiceflow API with the user's ID & request
-  const response = await axios({
-    method: 'POST',
-    url: `https://general-runtime.voiceflow.com/state/user/${userID}/interact`,
-    headers: { Authorization: VOICEFLOW_API_KEY, 'Content-Type': 'application/json' },
-    data: {
-      request,
-      config: {
-        tts: false,
-        stripSSML: true,
+  // call the Voiceflow API with the user's name & request, get back a response
+  try {
+    const response = await axios({
+      method: 'POST',
+      url: `https://general-runtime.voiceflow.com/state/user/${userID}/interact`,
+      headers: { Authorization: VOICEFLOW_API_KEY, 'Content-Type': 'application/json' },
+      data: {
+        request,
+        config: {
+          tts: false,
+          stripSSML: true,
+        },
       },
-    },
-  })
+    })
+    if (response.data) {
+      for (const trace of response.data) {
+        switch (trace.type) {
+          case 'text': {
+            if (trace.payload.message.includes('"blocks":')) {
+              let tmpBlock = trace.payload.message;
+              tmpBlock = tmpBlock.replace(/&quot;/g, '\\"');
+              await say(JSON.parse(tmpBlock));
+            } else {
+              const serialize = (node) => {
+                if (Text.isText(node)) {
+                  let string = node.text;
+                  let tags = '';
+                  if (node.fontWeight) {
+                    tags = '*';
+                  }
+                  if (node.italic) {
+                    tags = tags + '_';
+                  }
+                  if (node.underline) {
+                    // ignoring underline tag as Slack doesn't support it
+                    // https://api.slack.com/reference/surfaces/formatting
+                  }
+                  if (node.strikeThrough) {
+                    tags = tags + '~';
+                  }
+                  return `${tags}${string}${tags.split('').reverse().join('')}`;
+                }
 
-  // Handeling the API response
-  for (const trace of response.data) {
-    switch (trace.type) {
-      case 'text': {
-          // We use Slate's rendering
-          // and add custom styling
-          const serialize = node => {
-            if (Text.isText(node)) {
-              let string = node.text
-              let tags = ''
-              if (node.fontWeight) {
-                tags = '*'
+                const children = node.children.map((n) => serialize(n)).join('');
+
+                switch (node.type) {
+                  case 'link':
+                    return `<${escapeHtml(node.url)}|${children}>`;
+                  default:
+                    return children;
+                }
+              };
+
+              // Render slate content
+              let renderedMessage = trace.payload.slate.content
+                .map((slateData) => slateData.children.map((slateChild) => serialize(slateChild)).join(''))
+                .join('\n');
+
+              try {
+                await say({
+                  text: 'Voiceflow Bot',
+                  blocks: [
+                    {
+                      type: 'section',
+                      text: {
+                        type: 'mrkdwn',
+                        text: cleanText(stripBackSlashs(renderedMessage)),
+                      },
+                    },
+                  ],
+                });
+              } catch (error) {
+                // Avoid breaking the Bot by ignoring then content if not supported
+                console.log('Not supported yet');
+                return false;
               }
-              if (node.italic) {
-                tags = tags + '_'
-              }
-              if (node.underline) {
-                // ignoring underline tag as Slack doesn't support it
-                // https://api.slack.com/reference/surfaces/formatting
-              }
-              if (node.strikeThrough) {
-                tags = tags + '~'
-              }
-              return `${tags}${string}${tags.split('').reverse().join('')}`
             }
-
-            const children = node.children.map(n => serialize(n)).join('')
-
-            switch (node.type) {
-              case 'link':
-                return `<${escapeHtml(node.url)}|${children}>`
-              default:
-                return children
+            break;
+          }
+          case 'speak': {
+            if (trace.payload.message.includes('"blocks":')) {
+              await say(JSON.parse(trace.payload.message));
+            } else {
+              await say({
+                text: 'Voiceflow Bot',
+                blocks: [{ type: 'section', text: { type: 'mrkdwn', text: stripBackSlashs(trace.payload.message) } }],
+              });
             }
+            break;
           }
-
-          // Render slate content
-          let renderedMessage = trace.payload.slate.content
-            .map((slateData) =>
-              slateData.children
-                  .map((slateChild) => serialize(slateChild))
-                  .join('')
-            )
-            .join('\n')
-
-          console.log('Render:',renderedMessage)
-          try {
-            await say({
-            text: 'Voiceflow Bot',
-            blocks: [
-              {
-                type: 'section',
-                text: {
-                  type: 'mrkdwn',
-                  text: cleanText(stripBackSlashs(renderedMessage)),
-                },
-              },
-            ],
-          })
-          } catch (error) {
-            // Avoid breaking the Bot by ignoring then content if not supported
-            console.log('Not supported yet')
-            return false
-          }
-        break
-      }
-      case 'speak': {
-        try {
-          await say({
-            text: 'Voiceflow Bot',
-            blocks: [
-              {
-                type: 'section',
-                text: {
-                  type: 'mrkdwn',
-                  text: stripBackSlashs(trace.payload.message),
-                },
-              },
-            ],
-          })
-        } catch (error) {
-            // Avoid breaking the Bot by ignoring then content if not supported
-            console.log('Not supported yet')
-            return false
-        }
-        break
-      }
-      case 'visual': {
-        if (trace.payload.visualType === 'image') {
+          case 'visual': {
+            if (trace.payload.visualType === 'image') {
               try {
                 await say({
                   text: 'Voiceflow Bot',
                   blocks: [
                     {
                       type: 'image',
-                     image_url: trace.payload.image,
-                     alt_text: 'image',
+                      image_url: trace.payload.image,
+                      alt_text: 'image',
                     },
                   ],
-                })
+                });
               } catch (error) {
                 // Avoid breaking the Bot by ignoring then content if not supported
-                console.log('Not supported yet')
-                return false
+                console.log('Not supported yet');
+                return false;
               }
-        }
-        break
-      }
-      case 'choice': {
-        const buttons = trace.payload.buttons
-
-        if (buttons.length) {
-          try {
-            let url = null
-            await say({
-              text: 'Voiceflow Bot',
-              blocks: [
-                {
-                  type: 'actions',
-                  elements: buttons.map(({ name, request }) => {
-                    // Handle URL action
-                    if(Object.keys(request.payload).includes("actions")){
-                      if(Object.values(request.payload.actions[0]).includes("open_url")){
-                        url = escapeHtml(request.payload.actions[0].payload.url)
+            }
+            break;
+          }
+          case 'choice': {
+            const buttons = trace.payload.buttons;
+            if (buttons.length) {
+              let url = null;
+              let btId;
+              let filteredButtons = buttons
+                .filter((buttons) => buttons.name != 'null' && buttons.name != null)
+                .map(({ name, request }) => {
+                  // Handle URL action
+                  if (Object.keys(request.payload).includes('actions')) {
+                    console.log(request.payload);
+                    if (request.payload?.actions?.length > 0) {
+                      if (Object.values(request.payload.actions[0]).includes('open_url')) {
+                        url = escapeHtml(request.payload.actions[0].payload.url);
                       }
                     }
-                    if (request.type == 'intent') {
-                      let button = {
-                        type: 'button',
-                        action_id: `chip:${
-                          request.payload.intent.name
-                        }:${userID}:${Math.random().toString(6)}`,
-                        text: {
-                          type: 'plain_text',
-                          text: name,
-                          emoji: true,
-                        },
-                        value: name,
-                        style: 'primary'
-                      }
-                      if(url){ button.url = url}
-                      return button
-                    } else {
-                      let button = {
-                        type: 'button',
-                        action_id: `chip:${
-                          request.type
-                        }:${userID}:${Math.random().toString(6)}`,
-                        text: {
-                          type: 'plain_text',
-                          text: name,
-                          emoji: true,
-                        },
-                        value: name,
-                        style: 'primary'
-                      }
-                      if(url){ button.url = url}
-                      return button
+                  }
+                  if (request.type == 'intent') {
+                    let button = {
+                      type: 'button',
+                      action_id: `chip:${request.payload.intent.name}:${userID}:${Math.random().toString(6)}`,
+                      text: {
+                        type: 'plain_text',
+                        text: name,
+                        emoji: true,
+                      },
+                      value: name,
+                      style: 'primary',
+                    };
+                    if (url) {
+                      button.url = url;
                     }
-                  }),
-                },
-              ],
-            })
-          } catch (error) {
-            // Avoid breaking the Bot by ignoring then content if not supported
-            console.log('Not supported yet')
-            return false
+                    return button;
+                  } else {
+                    let button = {
+                      type: 'button',
+                      action_id: `chip:${request.type}:${userID}:${Math.random().toString(6)}`,
+                      text: {
+                        type: 'plain_text',
+                        text: name,
+                        emoji: true,
+                      },
+                      value: name,
+                      style: 'primary',
+                    };
+                    if (url) {
+                      button.url = url;
+                    }
+                    return button;
+                  }
+                });
+              await say({
+                text: 'Voiceflow Bot',
+                blocks: [
+                  {
+                    type: 'actions',
+                    elements: filteredButtons,
+                  },
+                ],
+              });
+            }
+            break;
+          }
+          case 'no-reply': {
+            noreply = setTimeout(function () {
+              interact(userID, say, client, {
+                type: 'no-reply',
+              });
+            }, trace.payload.timeout * 1000);
+            break;
+          }
+          case 'error': {
+            isError = true;
+            errorMessage = trace.payload || null;
+            break;
+          }
+          case 'end': {
+            // an end trace means the the Voiceflow dialog has ended
+            clearTimeout(noreply);
+            return false;
           }
         }
-        break
       }
-      case 'no-reply': {
-        noreply = setTimeout(function () {
-          interact(userID, say, client, {
-            type: 'no-reply',
-          })
-        }, trace.payload.timeout * 1000)
-        break
-      }
-      case 'end': {
-        // an end trace means the the Voiceflow dialog has ended
-        console.log('End Convo')
-        clearTimeout(noreply)
-        return false
+    } else {
+      try {
+        await say({
+          text: 'Voiceflow Bot',
+          blocks: [
+            {
+              type: 'section',
+              text: {
+                type: 'mrkdwn',
+                text: cleanText(stripBackSlashs('Error with DM API. Please try again a bit later')),
+              },
+            },
+          ],
+        });
+      } catch (error) {
+        // Avoid breaking the Bot by ignoring then content if not supported
+        console.log('Error sending error');
+        return false;
       }
     }
+  } catch (error) {
+    try {
+      await say({
+        text: 'Voiceflow Bot',
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: cleanText(stripBackSlashs('Error. Please try again a bit later')),
+            },
+          },
+        ],
+      });
+    } catch (error) {
+      // Avoid breaking the Bot by ignoring then content if not supported
+      return false;
+    }
+    return false;
   }
-  return true
+  return true;
 }
 

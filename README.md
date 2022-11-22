@@ -7,8 +7,11 @@
 	[v1.0]
 	- Fix for Socket Mode on Heroku
 	- Handle weblinks in Text step
-	- Handle link action in Buttons
 	- Translate text styling to Slack Markdown format
+	
+	[v1.0.1]
+	- Handle choice/buttons
+	- Updated logic to translate slate text
 
 # Prerequisite
 

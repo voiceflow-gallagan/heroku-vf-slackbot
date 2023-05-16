@@ -16,6 +16,8 @@ const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN
 const SLACK_SIGNING_SECRET = process.env.SLACK_SIGNING_SECRET
 
 let noreply
+let isError = false;
+let errorMessage = '';
 
 // Create the Slack app
 const app = new App({
@@ -129,9 +131,9 @@ async function interact(userID, say, client, request) {
   clearTimeout(noreply);
   let i = await client.users.info({
     user: userID,
-  });
-  let userName = i.user.profile.real_name_normalized;
-  let userPix = i.user.profile.image_48;
+  })
+  let userName = i.user.profile.real_name_normalized
+  let userPix = i.user.profile.image_48
 
   // call the Voiceflow API with the user's name & request, get back a response
   try {
@@ -323,7 +325,9 @@ async function interact(userID, say, client, request) {
           }
           case 'end': {
             // an end trace means the the Voiceflow dialog has ended
-            clearTimeout(noreply);
+            clearTimeout(noreply)
+            console.log('End Convo')
+            await saveTranscript(userName, userPix)
             return false;
           }
         }
@@ -371,3 +375,38 @@ async function interact(userID, say, client, request) {
   return true;
 }
 
+async function saveTranscript(username, userpix) {
+  console.log('SAVE TRANSCRIPT')
+  if (!username || username == '' || username == undefined) {
+    username = 'Anonymous';
+    userpix = 'https://avatars.slack-edge.com/2021-03-20/1879385687829_370801c602af840e43f8_192.png';
+  }
+  axios({
+    method: 'put',
+    url: 'https://api.voiceflow.com/v2/transcripts',
+    data: {
+      browser: 'Slack',
+      device: 'desktop',
+      os: 'macOS',
+      sessionID: session,
+      unread: true,
+      versionID: versionID,
+      notes: errorMessage == '' ? '' : errorMessage,
+      reportTags: isError == true ? ['system.saved'] : [],
+      user: {
+        name: username,
+        image: userpix,
+      },
+    },
+    headers: {
+      Authorization: apiKey,
+    },
+  })
+    .then(function (response) {
+      console.log('Saved!');
+      isError = false;
+      errorMessage = '';
+      session = `${process.env.VOICEFLOW_VERSION_ID}.${createSession()}`;
+    })
+    .catch((err) => console.log(err));
+}

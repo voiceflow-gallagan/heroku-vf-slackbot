@@ -166,11 +166,10 @@
 ![Voiceflow API key](doc/images/voiceflow/voiceflow-copy.png)
 
 
-<img src="doc/images/replit/logotype.webp" alt="Voiceflow logo" width="280"/>
+<a href="https://replit.com/@NicolasArcay1/voiceflow-slackbot?v=1"><img src="doc/images/replit/logotype.webp" alt="Voiceflow logo" width="280"/></a>
 
-### Deploy this code to Replit
 
-<a href="https://heroku.com/deploy" target="_blank"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Heroku logo" width="180"/></a>
+[Fork on Replit](https://replit.com/@NicolasArcay1/voiceflow-slackbot?v=1)
 
 ### Setup the Replit secrets
 
@@ -191,6 +190,17 @@ Voiceflow **project version ID** (Needed if you want to save transcripts, will d
 **VOICEFLOW\_API\_KEY**
 Voiceflow **project API key** (from the Integration section)
 
+In the Secrets tab, you can click on Edit as JSON button and paste the following JSON (do not forget to update the keys values):
+```
+{
+  "VOICEFLOW_API_KEY":"VF.12345678",
+  "VOICEFLOW_VERSION_ID":"12345678",
+  "VOICEFLOW_RUNTIME_ENDPOINT":"general-runtime.voiceflow.com",
+  "SLACK_APP_TOKEN":"XXXX",
+  "SLACK_BOT_TOKEN":"XXXXX",
+  "SLACK_SIGNING_SECRET":"XXXXXXX"
+}
+```
 
 ## ![Slack logo](doc/images/slack/slack-logo.png)
 

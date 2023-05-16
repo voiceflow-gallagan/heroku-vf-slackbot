@@ -8,10 +8,14 @@
 	- Fix for Socket Mode on Heroku
 	- Handle weblinks in Text step
 	- Translate text styling to Slack Markdown format
-	
+
 	[v1.0.1]
 	- Handle choice/buttons
 	- Updated logic to translate slate text
+
+    [v1.0.2]
+	- Add createSession function
+	- Updated interact to save transcript
 
 # Prerequisite
 
@@ -169,7 +173,7 @@
 
 ### Setup the Heroku app
 
-> Choose a **name** for your app  
+> Choose a **name** for your app
 > Set the config var with all the info you've previously saved
 
 **SLACK\_APP\_TOKEN**
@@ -180,6 +184,9 @@ Slack **bot token** (starting with **xoxb-**)
 
 **SLACK\_SIGNING\_SECRET**
 Slack app **signing secret**
+
+**VOICEFLOW\VERSION\_ID**
+Voiceflow **project version ID** (from Assistant settings or default to 'production')
 
 **VOICEFLOW\_API\_KEY**
 Voiceflow **project API key** (from the Integration section)
@@ -199,7 +206,7 @@ Voiceflow **project API key** (from the Integration section)
 ![Deploy](doc/images/heroku/heroku-worker-confirm.png)
 
 > After the changes, your config **should look like this**:
- 
+
 ![Deploy](doc/images/heroku/heroku-worker.png)
 
 

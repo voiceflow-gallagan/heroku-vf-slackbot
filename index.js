@@ -1,12 +1,14 @@
 /* eslint-disable no-await-in-loop */
 import slack_pkg from '@slack/bolt'
 const { App } = slack_pkg
-import { cleanEmail, stripEmojis, stripBackSlashs, cleanText, CHIP_ACTION_REGEX, ANY_WORD_REGEX } from './components/utils.js'
+import { createSession, cleanEmail, stripEmojis, stripBackSlashs, cleanText, CHIP_ACTION_REGEX, ANY_WORD_REGEX } from './components/utils.js'
 import * as Home from './components/home.js'
 import axios from 'axios'
 import { Text } from 'slate'
 import escapeHtml from 'escape-html'
 
+const versionID = process.env.VOICEFLOW_VERSION_ID || 'production'
+let session = `${versionID}.${createSession()}`
 const VOICEFLOW_API_KEY = process.env.VOICEFLOW_API_KEY
 const SLACK_APP_TOKEN = process.env.SLACK_APP_TOKEN
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN
@@ -134,8 +136,8 @@ async function interact(userID, say, client, request) {
   try {
     const response = await axios({
       method: 'POST',
-      url: `https://general-runtime.voiceflow.com/state/user/${userID}/interact`,
-      headers: { Authorization: VOICEFLOW_API_KEY, 'Content-Type': 'application/json' },
+      url: `https://general-runtime.voiceflow.com/state/${versionID}/user/${userID}/interact`,
+      headers: { Authorization: VOICEFLOW_API_KEY, 'Content-Type': 'application/json', sessionid: session },
       data: {
         request,
         config: {
@@ -143,6 +145,7 @@ async function interact(userID, say, client, request) {
           stripSSML: true,
         },
       },
+      endpoint: process.env.VOICEFLOW_RUNTIME_ENDPOINT,
     })
     if (response.data) {
       for (const trace of response.data) {

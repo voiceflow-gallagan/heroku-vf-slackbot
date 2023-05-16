@@ -166,10 +166,10 @@
 ![Voiceflow API key](doc/images/voiceflow/voiceflow-copy.png)
 
 
-<a href="https://replit.com/@NicolasArcay1/voiceflow-slackbot?v=1"><img src="doc/images/replit/logotype.webp" alt="Voiceflow logo" width="280"/></a>
+<a href="https://replit.com/@niko-voiceflow/voiceflow-slackbot?v=1"><img src="doc/images/replit/logotype.webp" alt="Voiceflow logo" width="280"/></a>
 
 
-[Fork on Replit](https://replit.com/@NicolasArcay1/voiceflow-slackbot?v=1)
+[Fork on Replit](https://replit.com/@niko-voiceflow/voiceflow-slackbot?v=1)
 
 ### Setup the Replit secrets
 

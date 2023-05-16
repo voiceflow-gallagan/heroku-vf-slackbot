@@ -399,7 +399,7 @@ async function saveTranscript(username, userpix) {
       },
     },
     headers: {
-      Authorization: apiKey,
+      Authorization: VOICEFLOW_API_KEY,
     },
   })
     .then(function (response) {

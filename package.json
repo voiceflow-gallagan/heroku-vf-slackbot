@@ -1,5 +1,5 @@
 {
-  "name": "heroku-vf-slackbot",
+  "name": "voiceflow-slackbot",
   "version": "1.0.2",
   "description": "Use Voiceflow to run a Slack Bot with Dialog Manager API",
   "main": "index.js",

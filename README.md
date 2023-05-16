@@ -1,4 +1,4 @@
-# heroku-vf-slackbot
+# Voiceflow Slackbot
 
 #### Use Voiceflow Dialog Manager API to run a Slack Bot
 
@@ -16,10 +16,11 @@
     [v1.0.2]
 	- Add createSession function
 	- Updated interact to save transcript
+    - Migrate from Heroku to Replit
 
 # Prerequisite
 
-- [Heroku](https://www.heroku.com/) account
+- [Replit](https://www.replit.com/) account
 - [Slack API](https://api.slack.com/) access
 - [Voiceflow](https://www.voiceflow.com) **Chat Assistant** project
 
@@ -156,7 +157,7 @@
 
 > Go to [Voiceflow Creator](https://creator.voiceflow.com) and open the <mark>**Chat Assistant project**</mark> you want to use
 
-> On your project, click on **Integration** from the left sidebar (or press the **3** key)
+> On your project, click on **Integration** from the left sidebar (or press the **6** key)
 
 ![Voiceflow integration](doc/images/voiceflow/voiceflow-integration.png)
 
@@ -165,16 +166,15 @@
 ![Voiceflow API key](doc/images/voiceflow/voiceflow-copy.png)
 
 
-<img src="doc/images/heroku/heroku-logo.png" alt="Voiceflow logo" width="180"/>
+<img src="doc/images/replit/logotype.webp" alt="Voiceflow logo" width="280"/>
 
-### Deploy this code to Heroku
+### Deploy this code to Replit
 
 <a href="https://heroku.com/deploy" target="_blank"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Heroku logo" width="180"/></a>
 
-### Setup the Heroku app
+### Setup the Replit secrets
 
-> Choose a **name** for your app
-> Set the config var with all the info you've previously saved
+> Set new Secrets with the following info
 
 **SLACK\_APP\_TOKEN**
 Slack **app secret** (starting with **xapp-**)
@@ -185,30 +185,11 @@ Slack **bot token** (starting with **xoxb-**)
 **SLACK\_SIGNING\_SECRET**
 Slack app **signing secret**
 
-**VOICEFLOW\VERSION\_ID**
-Voiceflow **project version ID** (from Assistant settings or default to 'production')
+**VOICEFLOW\_VERSION\_ID**
+Voiceflow **project version ID** (Needed if you want to save transcripts, will default to 'production' otherwise)
 
 **VOICEFLOW\_API\_KEY**
 Voiceflow **project API key** (from the Integration section)
-
-> Click on **Deploy app**
-
-![Deploy](doc/images/heroku/heroku-setup.png)
-
-> Wait for your app to be fully deployed
-
-![Deploy](doc/images/heroku/heroku-deploy.png)
-
-> **Last important thing we want to do is to swap ressources on your Heroky app.**
-> Here we want to **turn off** the **web** and **turn on** the **worker** as the Slack bot is setup in **socket mode**
-
-![Deploy](doc/images/heroku/heroku-ressources.png)
-![Deploy](doc/images/heroku/heroku-worker-confirm.png)
-
-> After the changes, your config **should look like this**:
-
-![Deploy](doc/images/heroku/heroku-worker.png)
-
 
 
 ## ![Slack logo](doc/images/slack/slack-logo.png)

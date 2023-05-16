@@ -1,11 +1,12 @@
 {
   "name": "heroku-vf-slackbot",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Use Voiceflow to run a Slack Bot with Dialog Manager API",
   "main": "index.js",
   "sourceType": "module",
   "type": "module",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint ."
   },

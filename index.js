@@ -10,6 +10,7 @@ import escapeHtml from 'escape-html'
 const versionID = process.env.VOICEFLOW_VERSION_ID || 'production'
 let session = `${versionID}.${createSession()}`
 const VOICEFLOW_API_KEY = process.env.VOICEFLOW_API_KEY
+const VOICEFLOW_RUNTIME_ENDPOINT = process.env.VOICEFLOW_RUNTIME_ENDPOINT || 'general-runtime.voiceflow.com'
 const SLACK_APP_TOKEN = process.env.SLACK_APP_TOKEN
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN
 const SLACK_SIGNING_SECRET = process.env.SLACK_SIGNING_SECRET
@@ -136,7 +137,7 @@ async function interact(userID, say, client, request) {
   try {
     const response = await axios({
       method: 'POST',
-      url: `https://general-runtime.voiceflow.com/state/${versionID}/user/${userID}/interact`,
+      url: `https://${VOICEFLOW_RUNTIME_ENDPOINT}/state/${versionID}/user/${userID}/interact`,
       headers: { Authorization: VOICEFLOW_API_KEY, 'Content-Type': 'application/json', sessionid: session },
       data: {
         request,
@@ -145,7 +146,7 @@ async function interact(userID, say, client, request) {
           stripSSML: true,
         },
       },
-      endpoint: process.env.VOICEFLOW_RUNTIME_ENDPOINT,
+      endpoint: VOICEFLOW_RUNTIME_ENDPOINT,
     })
     if (response.data) {
       for (const trace of response.data) {
